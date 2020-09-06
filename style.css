@@ -1,0 +1,85 @@
+body {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1;
+  background: whitesmoke;
+}
+.navWrapper {
+  width: 100%;
+  background: #343a40 !important;
+}
+
+.contentWrapper {
+  margin-top: 30px;
+}
+
+.searchBtn {
+  margin-top: 15px;
+}
+
+.cityList {
+  list-style: none;
+  background: white;
+  border: 1px solid #e6e7e8;
+  border-radius: 6px;
+  padding-left: 5px;
+}
+
+.cityList li {
+  padding: 15px;
+  border-bottom: 1px solid #e6e7e8;
+}
+
+.topWrapper {
+  background: white;
+  border: 1px solid #e6e7e8;
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.topWrapper h2 {
+  margin-bottom: 20px;
+}
+
+.fiveDay {
+  margin-top: 30px;
+}
+
+/* Set the 'cards' wrapper to flexbox to evenly distribute in the container */
+
+.cardsWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.weatherIcon {
+  width: 20px;
+  height: 20px;
+  margin: 10px auto;
+}
+
+.card {
+  background: #009cde;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+.savedCities {
+  cursor: pointer;
+}
+
+.hot {
+  background: #ff5050;
+  color: white;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.cool {
+  background: #50c878;
+  border-radius: 8px;
+  padding: 10px;
+  color: white;
+}
