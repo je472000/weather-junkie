@@ -73,4 +73,122 @@ $(document).ready(function () {
         }
       }
     );
-   
+    // get 5 day forecast
+    $.get(
+      `http://api.openweathermap.org/data/2.5/forecast?q=${searchInput}&units=imperial&appid=b8f5f2e18ac64dd7af4f0ab6c0c25a98`,
+      function (data) {
+        console.log("FORECAST DATA: ", data);
+        let newIndex = 0;
+        data.list.map((d) => {
+          let tempString = moment.unix(d.dt).format("MM/DD/YYYY hh:mm a");
+          // we will only use the 4pm item returned vs. the hourly breakdown the api returns
+          if (tempString.includes("04:00 pm")) {
+            $("#allCards").append(`
+              <div id="card${newIndex}" data-weather='${JSON.stringify(
+              d
+            )}' class="card">
+              <h5 class="date">${moment.unix(d.dt).format("MM/DD/YYYY")}</h5>
+              <img class="weatherIcon" src="http://openweathermap.org/img/wn/${
+                d.weather[0].icon
+              }@2x.png" />
+              <p>Temp: ${d.main.temp} F</p>
+              <p>Humidity: ${d.main.humidity}%</p>
+            </div>`);
+            newIndex = newIndex + 1;
+          }
+        });
+      }
+    );
+    // save values to local storage in a JSON object
+    setTimeout(() => {
+      const SearchValues = {
+        name: $("#CityResponse").text(),
+        date: $("#weather").text(),
+        icon: $("#icon").html(),
+        temperature: $("#Temperature").text(),
+        humidity: $("#Humidity").text(),
+        windSpeed: $("#WindSpeed").text(),
+        uvIndex: $("#uvIndex").html(),
+        dayOne: $("#card0").data(),
+        dayTwo: $("#card1").data(),
+        dayThree: $("#card2").data(),
+        dayFour: $("#card3").data(),
+        dayFive: $("#card4").data(),
+      };
+      // stringify JSON and save to local storage
+      localStorage.setItem(searchInput, JSON.stringify(SearchValues));
+    }, 3000);
+
+    return false;
+  });
+
+  // When a user clicks or searches this utility function will repopulate the Document Object Model
+  function updateInterface(savedData) {
+    $("#weather").text(savedData.date);
+    $("#CityResponse").text(savedData.name);
+    $("#Humidity").text(savedData.humidity);
+    $("#WindSpeed").text(savedData.windSpeed);
+    $("#Temperature").text(savedData.temperature);
+    $("#icon").html(savedData.icon);
+    $("#uvIndex").html(savedData.uvIndex);
+    if (savedData.uvIndex > 9) {
+      $("#uvIndex").addClass("hot");
+    } else {
+      $("#uvIndex").addClass("cool");
+    }
+
+    $("#allCards").html(
+      `<div id="card0" class="card">
+            <h5 class="date">${moment
+              .unix(savedData.dayOne.weather.dt)
+              .format("MM/DD/YYYY")}</h5>
+            <img class="weatherIcon" src="http://openweathermap.org/img/wn/${
+              savedData.dayOne.weather.weather[0].icon
+            }@2x.png" />
+            <p>Temp: ${savedData.dayOne.weather.main.temp} F</p>
+            <p>Humidity: ${savedData.dayOne.weather.main.humidity}%</p>
+          </div>
+        <div id="card1" class="card">
+          <h5 class="date">${moment
+            .unix(savedData.dayTwo.weather.dt)
+            .format("MM/DD/YYYY")}</h5>
+          <img class="weatherIcon" src="http://openweathermap.org/img/wn/${
+            savedData.dayTwo.weather.weather[0].icon
+          }@2x.png" />
+          <p>Temp: ${savedData.dayTwo.weather.main.temp} F</p>
+          <p>Humidity: ${savedData.dayTwo.weather.main.humidity}%</p>
+        </div>
+        <div id="card2" class="card">
+        <h5 class="date">${moment
+          .unix(savedData.dayThree.weather.dt)
+          .format("MM/DD/YYYY")}</h5>
+        <img class="weatherIcon" src="http://openweathermap.org/img/wn/${
+          savedData.dayThree.weather.weather[0].icon
+        }@2x.png" />
+        <p>Temp: ${savedData.dayThree.weather.main.temp} F</p>
+        <p>Humidity: ${savedData.dayThree.weather.main.humidity}%</p>
+      </div>
+        <div id="card3" class="card">
+      <h5 class="date">${moment
+        .unix(savedData.dayFour.weather.dt)
+        .format("MM/DD/YYYY")}</h5>
+      <img class="weatherIcon" src="http://openweathermap.org/img/wn/${
+        savedData.dayFour.weather.weather[0].icon
+      }@2x.png" />
+      <p>Temp: ${savedData.dayFour.weather.main.temp} F</p>
+      <p>Humidity: ${savedData.dayFour.weather.main.humidity}%</p>
+    </div>
+        <div id="card4" class="card">
+    <h5 class="date">${moment
+      .unix(savedData.dayFive.weather.dt)
+      .format("MM/DD/YYYY")}</h5>
+    <img class="weatherIcon" src="http://openweathermap.org/img/wn/${
+      savedData.dayFive.weather.weather[0].icon
+    }@2x.png" />
+    <p>Temp: ${savedData.dayFive.weather.main.temp} F</p>
+    <p>Humidity: ${savedData.dayFive.weather.main.humidity}%</p>
+  </div>`
+    );
+    return false;
+  }
+});
